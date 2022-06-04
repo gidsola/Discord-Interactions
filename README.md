@@ -1,9 +1,9 @@
 # Discord Interactions.
-#### Discord Interactions handler with Native Webhook handling for a zero dependancy solution. (Requires Node.Js v18 minimum)  
+#### Discord Interactions with Native Webhook handling for a zero dependancy solution.  
 
 
 ### Callbacks:
-##### https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+**https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type**  
 
 | name | type | description | example |
 |---|---|---|---|
@@ -19,7 +19,7 @@
 
 
 ### FollowUps:
-##### https://discord.com/developers/docs/interactions/receiving-and-responding#followup-messages
+**https://discord.com/developers/docs/interactions/receiving-and-responding#followup-messages**  
 
 | name  | description  | example  |
 |---|---|---|
