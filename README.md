@@ -5,38 +5,37 @@
 ### Callbacks:
 **https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type**  
 
-| name | type | description | example |
-|---|---|---|---|
-| callback.reply  | 4 | Immediately respond to an interaction. | await interaction.callback.reply(event, {ephemeral: false}, { @content: '' } );  |
-| callback.defer  | 5 | Show thinking state, create followup after. | await interaction.callback.defer(event, {ephemeral: false});  |
-| callback.component_defer  | 6 | Deferred message for components. | await interaction.callback.component_defer(event, {ephemeral: false});  |
-| callback.component_update  | 7 | Components message update. | await interaction.callback.component_update(event, {ephemeral: false}, { @content: '' } ); |
-| callback.autocomplete_reply  | 8 | Show autocomplete results |   |
-| callback.modal_reply  | 9 | Reply to command with modal popup | await interaction.callback.modal_reply(event, { @content: '' } ); |
-| callback.get_original  | @ | Get original interaction. | await interaction.callback.get_original(event); |
-| callback.edit_original  | @ | Edit original interaction. | await interaction.callback.edit_original(event, { content: ``, } ); |
-| callback.delete_original  | @ | Delete original interaction. | await interaction.callback.delete_original(event); |
+| name | type | description |
+|---|---|---|
+| callback.reply  | 4 | Immediately respond to an interaction. |
+| callback.defer  | 5 | Show thinking state, create followup after. |
+| callback.component_defer  | 6 | Deferred message for components. |
+| callback.component_update  | 7 | Components message update. |
+| callback.autocomplete_reply  | 8 | Show autocomplete results |
+| callback.modal_reply  | 9 | Reply to command with modal popup |
+| callback.get_original  | @ | Get original interaction. |
+| callback.edit_original  | @ | Edit original interaction. |
+| callback.delete_original  | @ | Delete original interaction. |
 
 
 ### FollowUps:
 **https://discord.com/developers/docs/interactions/receiving-and-responding#followup-messages**  
 
-| name  | description  | example  |
-|---|---|---|
-| followup.create  | Create a followup message for an Interaction.  | await interaction.followup.create(event, {ephemeral: false}, { @content: '' } );  |
-| followup.edit  | Edits a followup message for an Interaction.  | await interaction.followup.edit(event, {id: @message.id}, { @content: '' } );  |
-| followup.get  | Returns a followup message for an Interaction.  | await interaction.followup.get(event, {id: @message.id} ); |
-| followup.del  | Deletes a followup message for an Interaction.  | await interaction.followup.del(event, {id: @message.id} ); |
+| name  | description  |
+|---|---|
+| followup.create  | Create a followup message for an Interaction.  |
+| followup.edit  | Edits a followup message for an Interaction.  |
+| followup.get  | Returns a followup message for an Interaction.  |
+| followup.del  | Deletes a followup message for an Interaction.  |
 
 ### Code Examples:
 
-```js
-
-const interaction = require('Discord-Interactions');
+```js  
+const interaction = require('Discord-Interactions');  
 
 await interaction.callback.defer(event, {ephemeral: false});
 
-  const stuff = thing todo here;
+  let stuff = "Hello World";
 
   if (stuff) {
     try {
@@ -47,12 +46,11 @@ await interaction.callback.defer(event, {ephemeral: false});
       console.log(e);
     }
   }
-```
+```  
 
 
-```js
-
-const interaction = require('Discord-Interactions');
+```js  
+const interaction = require('Discord-Interactions');  
 
 await interaction.callback.modal_reply(event, {
     custom_id: `suggestion`,
@@ -71,11 +69,10 @@ await interaction.callback.modal_reply(event, {
       }]
     }]
   });
-```
+```  
 
 
 ```js
-
 const interaction = require('Discord-Interactions');
 
 await interaction.callback.reply(event, {ephemeral: true}, {
@@ -134,7 +131,6 @@ await interaction.callback.reply(event, {ephemeral: true}, {
 
 
 ```js
-
 const interaction = require('Discord-Interactions');
 
 await interaction.callback.component_defer(event, {ephemeral: true});
@@ -151,8 +147,9 @@ await interaction.callback.component_defer(event, {ephemeral: true});
         },
       ],
       components: ,
-    });
-```
+    });  
+```  
+
 
 Created in:
 [![Created in Autocode. (https://Autocode.com)](https://content.public.files.stdlib.com/shared/static/branding/autocode-logo.svg "Autocode")](https://Autocode.com) Autocode.
