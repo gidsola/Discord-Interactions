@@ -2,7 +2,7 @@
 #### Discord Interactions handler with Native Webhook handling for a zero dependancy solution. (Requires Node.Js v18 minimum)  
 
 
-#### Callbacks:
+### Callbacks:
 ##### https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
 
 | name | type | description | example |
@@ -18,7 +18,7 @@
 | callback.delete_original  | @ | Delete original interaction. | await interaction.callback.delete_original(event); |
 
 
-#### FollowUps:
+### FollowUps:
 ##### https://discord.com/developers/docs/interactions/receiving-and-responding#followup-messages
 
 | name  | description  | example  |
@@ -28,7 +28,7 @@
 | followup.get  | Returns a followup message for an Interaction.  | await interaction.followup.get(event, {id: @message.id} ); |
 | followup.del  | Deletes a followup message for an Interaction.  | await interaction.followup.del(event, {id: @message.id} ); |
 
-#### Code Examples:
+### Code Examples:
 
 ```js
 
