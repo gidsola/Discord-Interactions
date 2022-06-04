@@ -4,13 +4,13 @@
 module.exports.callback = {
   //CHANNEL_MESSAGE_WITH_SOURCE	=== (4) //respond to an interaction with a message
   reply: async (interaction, bool = {}, input = {}) => {
-    if (bool.ephemeral === true) {
-      dflags = 64;
-    } else {
-      dflags = 0;
-    }
     let cb_reply;
     try {
+      if (bool.ephemeral === true) {
+        dflags = 64;
+      } else {
+        dflags = 0;
+      }
       cb_reply = await request({
         method: 'POST',
         url: encodeURI(`discord.com`),
@@ -40,13 +40,13 @@ module.exports.callback = {
 
   //DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE === (5) //ACK an interaction and edit a response later, the user sees a loading state
   defer: async (interaction, bool = {}) => {
-    if (bool.ephemeral === true) {
-      dflags = 64;
-    } else {
-      dflags = 0;
-    }
     let cb_defer;
     try {
+      if (bool.ephemeral === true) {
+        dflags = 64;
+      } else {
+        dflags = 0;
+      }
       cb_defer = await request({
         method: 'POST',
         url: encodeURI(`discord.com`),
@@ -57,9 +57,10 @@ module.exports.callback = {
         },
         body: JSON.stringify({
           type: 5,
-          data: {flags: dflags,},
+          data: {
+            flags: dflags
+          },
         }),
-        
       });
     } catch (e) {
       console.log(e);
@@ -69,13 +70,13 @@ module.exports.callback = {
 
   //DEFERRED_UPDATE_MESSAGE* === (6)	for components, //ACK an interaction and edit the original message later; the user does not see a loading state
   component_defer: async (interaction, bool = {}) => {
-    if (bool.ephemeral === true) {
-      dflags = 64;
-    } else {
-      dflags = 0;
-    }
     let cb_comp_defer;
     try {
+      if (bool.ephemeral === true) {
+        dflags = 64;
+      } else {
+        dflags = 0;
+      }
       cb_comp_defer = await request({
         method: 'POST',
         url: encodeURI(`discord.com`),
@@ -97,13 +98,13 @@ module.exports.callback = {
 
   //UPDATE_MESSAGE*	=== (7)	for components, //edit the message the component was attached to
   component_update: async (interaction, bool = {}, input = {}) => {
-    if (bool.ephemeral === true) {
-      dflags = 64;
-    } else {
-      dflags = 0;
-    }
     let cb_comp_update;
     try {
+      if (bool.ephemeral === true) {
+        dflags = 64;
+      } else {
+        dflags = 0;
+      }
       cb_comp_update = await request({
         method: 'POST',
         url: encodeURI(`discord.com`),
@@ -133,14 +134,13 @@ module.exports.callback = {
 
   //APPLICATION_COMMAND_AUTOCOMPLETE_RESULT === (8) //respond to an autocomplete interaction with suggested choices
   autocomplete_reply: async (interaction, bool = {}, input = {}) => {
-    //console.log(input);
-    if (bool.ephemeral === true) {
-      dflags = 64;
-    } else {
-      dflags = 0;
-    }
     let cb_auto_reply;
     try {
+      if (bool.ephemeral === true) {
+        dflags = 64;
+      } else {
+        dflags = 0;
+      }
       cb_auto_reply = await request({
         method: 'POST',
         url: encodeURI(`discord.com`),
@@ -188,9 +188,9 @@ module.exports.callback = {
     }
     return cb_modal_reply;
   }, //EO modal_reply
-  
+
   //Get Original Interaction Response
-  get_original: async (interaction/*, input = {}*/) => {
+  get_original: async (interaction /*, input = {}*/) => {
     let get_origin;
     try {
       get_origin = await request({
@@ -207,7 +207,7 @@ module.exports.callback = {
     }
     return JSON.parse(get_origin.body.toString());
   }, //Get Original Interaction Response
-  
+
   //Edit Original Interaction Response
   edit_original: async (interaction, input = {}) => {
     let edit_origin;
@@ -234,9 +234,9 @@ module.exports.callback = {
     }
     return JSON.parse(edit_origin.body.toString());
   }, //Edit Original Interaction Response
-  
+
   //Delete Original Interaction Response
-  delete_original: async (interaction/*, input = {}*/) => {
+  delete_original: async (interaction) => {
     let delete_origin;
     try {
       delete_origin = await request({
@@ -261,14 +261,13 @@ module.exports.callback = {
 module.exports.followup = {
   //FOLLOWUP_CREATE
   create: async (interaction, bool = {}, input = {}) => {
-    if (bool.ephemeral === true) {
-      dflags = 64;
-    } else {
-      dflags = 0;
-    }
-    //console.log(`Interaction OUT: `,interaction);
     let f_create;
     try {
+      if (bool.ephemeral === true) {
+        dflags = 64;
+      } else {
+        dflags = 0;
+      }
       f_create = await request({
         method: 'POST',
         url: encodeURI(`discord.com`),
@@ -322,12 +321,12 @@ module.exports.followup = {
       });
     } catch (e) {
       console.log(e);
-    } 
+    }
     return f_edit;
   }, //EO INTERACTION FOLLOWUP EDIT
-  
+
   //FOLLOWUP_GET
-  get: async (interaction, message = {}/*, input = {}*/) => {
+  get: async (interaction, message = {}) => {
     let f_get;
     try {
       f_get = await request({
@@ -341,12 +340,12 @@ module.exports.followup = {
       });
     } catch (e) {
       console.log(e);
-    } 
+    }
     return f_get;
   }, //EO INTERACTION FOLLOWUP GET
-  
+
   //FOLLOWUP_DELETE
-  del: async (interaction, message = {}/*, input = {}*/) => {
+  del: async (interaction, message = {}) => {
     let f_delete_followup;
     try {
       f_delete_followup = await request({
@@ -360,7 +359,7 @@ module.exports.followup = {
       });
     } catch (e) {
       console.log(e);
-    } 
+    }
     return f_delete_followup;
   }, //EO INTERACTION FOLLOWUP DELETE
 }; //EO MODULE FOLLOWUP
@@ -399,7 +398,7 @@ async function request(params) {
       });
       req.write(params.body);
       req.end();
-    } 
+    }
     else if (params.method === 'GET') {
       const options = {
         host: params.url,
