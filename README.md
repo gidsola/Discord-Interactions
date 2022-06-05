@@ -31,7 +31,7 @@
 ### Code Examples:
 
 ```js  
-const interaction = require('Discord-Interactions');  
+const interaction = require('discord-interactions-zero');  
 
 await interaction.callback.defer(event, {ephemeral: false});
 
@@ -50,7 +50,7 @@ await interaction.callback.defer(event, {ephemeral: false});
 
 
 ```js  
-const interaction = require('Discord-Interactions');  
+const interaction = require('discord-interactions-zero');  
 
 await interaction.callback.modal_reply(event, {
     custom_id: `suggestion`,
@@ -73,7 +73,7 @@ await interaction.callback.modal_reply(event, {
 
 
 ```js
-const interaction = require('Discord-Interactions');
+const interaction = require('discord-interactions-zero');
 
 await interaction.callback.reply(event, {ephemeral: true}, {
       content: '',
@@ -131,7 +131,7 @@ await interaction.callback.reply(event, {ephemeral: true}, {
 
 
 ```js
-const interaction = require('Discord-Interactions');
+const interaction = require('discord-interactions-zero');
 
 await interaction.callback.component_defer(event, {ephemeral: true});
 
