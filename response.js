@@ -3,10 +3,10 @@
 /***************************************************/
 module.exports.callback = {
   //CHANNEL_MESSAGE_WITH_SOURCE	=== (4) //respond to an interaction with a message
-  reply: async (interaction, bool = {}, input = {}) => {
+  reply: async (interaction, input = {}) => {
     let cb_reply;
     try {
-      if (bool.ephemeral === true) {
+      if (input.ephemeral === true) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -38,10 +38,10 @@ module.exports.callback = {
   }, // EO reply
 
   //DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE === (5) //ACK an interaction and edit a response later, the user sees a loading state
-  defer: async (interaction, bool = {}) => {
+  defer: async (interaction, input = {}) => {
     let cb_defer;
     try {
-      if (bool.ephemeral === true) {
+      if (input.ephemeral === true) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -67,10 +67,10 @@ module.exports.callback = {
   }, // EO defer
 
   //DEFERRED_UPDATE_MESSAGE* === (6)	for components, //ACK an interaction and edit the original message later; the user does not see a loading state
-  component_defer: async (interaction, bool = {}) => {
+  component_defer: async (interaction, input = {}) => {
     let cb_comp_defer;
     try {
-      if (bool.ephemeral === true) {
+      if (input.ephemeral === true) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -94,10 +94,10 @@ module.exports.callback = {
   }, // EO component_defer
 
   //UPDATE_MESSAGE*	=== (7)	for components, //edit the message the component was attached to
-  component_update: async (interaction, bool = {}, input = {}) => {
+  component_update: async (interaction, input = {}) => {
     let cb_comp_update;
     try {
-      if (bool.ephemeral === true) {
+      if (input.ephemeral === true) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -129,10 +129,10 @@ module.exports.callback = {
   }, // EO component_update
 
   //APPLICATION_COMMAND_AUTOCOMPLETE_RESULT === (8) //respond to an autocomplete interaction with suggested choices
-  autocomplete_reply: async (interaction, bool = {}, input = {}) => {
+  autocomplete_reply: async (interaction, input = {}) => {
     let cb_auto_reply;
     try {
-      if (bool.ephemeral === true) {
+      if (input.ephemeral === true) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -184,7 +184,7 @@ module.exports.callback = {
   }, //EO modal_reply
 
   //Get Original Interaction Response
-  get_original: async (interaction /*, input = {}*/) => {
+  get_original: async (interaction) => {
     let get_origin;
     try {
       get_origin = await get({
@@ -251,10 +251,10 @@ module.exports.callback = {
 /***************************************************/
 module.exports.followup = {
   //FOLLOWUP_CREATE
-  create: async (interaction, bool = {}, input = {}) => {
+  create: async (interaction, input = {}) => {
     let f_create;
     try {
-      if (bool.ephemeral === true) {
+      if (input.ephemeral === true) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -288,12 +288,12 @@ module.exports.followup = {
   }, // EO INTERACTION FOLLOWUP
 
   //FOLLOWUP_EDIT
-  edit: async (interaction, message = {}, input = {}) => {
+  edit: async (interaction, input = {}) => {
     let f_edit;
     try {
       f_edit = await patch({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${message.id}`),
+        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
         statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
@@ -315,12 +315,12 @@ module.exports.followup = {
   }, //EO INTERACTION FOLLOWUP EDIT
 
   //FOLLOWUP_GET
-  get: async (interaction, message = {}) => {
+  get: async (interaction, input = {}) => {
     let f_get;
     try {
       f_get = await get({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${message.id}`),
+        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
         statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
@@ -333,12 +333,12 @@ module.exports.followup = {
   }, //EO INTERACTION FOLLOWUP GET
 
   //FOLLOWUP_DELETE
-  del: async (interaction, message = {}) => {
+  del: async (interaction, input = {}) => {
     let f_delete_followup;
     try {
       f_delete_followup = await del({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${message.id}`),
+        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
         statusCode: 200,
         headers: {
           'Content-Type': 'application/json',

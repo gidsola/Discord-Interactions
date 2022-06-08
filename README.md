@@ -3,7 +3,7 @@
 
 !!!! I am changing the format of this version !!!!  
 
-I will be moving the ephemeral selector to reside above 'content:'  
+I AM moving the ephemeral selector to reside above 'content:'  
 
 **PLEASE BE AWARE**
 
