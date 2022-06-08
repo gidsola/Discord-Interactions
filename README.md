@@ -1,11 +1,17 @@
 # Discord Interactions.
 #### Discord Interactions with Native Webhook handling for a zero dependancy solution.  
 
-!!!! I am changing the format of this version !!!!  
+Update 2.0.2 Brings a new format to use.  
+```  
+await interaction.callback.defer(event, {ephemeral: true});  
 
-I AM moving the ephemeral selector to reside above 'content:'  
-
-**PLEASE BE AWARE**
+await interaction.followup.create(event, {
+  ephemeral: true,
+  content: 'Your suggestion has been noted, Thank You',
+});  
+```
+It is the same for all callbacks & followups. ONLY the defers remain unchanged.
+This format also agrees with the auto-formatter :)
 
 
 ### Callbacks:
