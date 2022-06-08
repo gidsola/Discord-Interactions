@@ -11,8 +11,7 @@ module.exports.callback = {
       } else {
         dflags = 0;
       }
-      cb_reply = await request({
-        method: 'POST',
+      cb_reply = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
         statusCode: 200,
@@ -47,8 +46,7 @@ module.exports.callback = {
       } else {
         dflags = 0;
       }
-      cb_defer = await request({
-        method: 'POST',
+      cb_defer = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
         statusCode: 200,
@@ -77,8 +75,7 @@ module.exports.callback = {
       } else {
         dflags = 0;
       }
-      cb_comp_defer = await request({
-        method: 'POST',
+      cb_comp_defer = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
         statusCode: 200,
@@ -105,8 +102,7 @@ module.exports.callback = {
       } else {
         dflags = 0;
       }
-      cb_comp_update = await request({
-        method: 'POST',
+      cb_comp_update = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
         statusCode: 200,
@@ -141,8 +137,7 @@ module.exports.callback = {
       } else {
         dflags = 0;
       }
-      cb_auto_reply = await request({
-        method: 'POST',
+      cb_auto_reply = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
         statusCode: 200,
@@ -166,8 +161,7 @@ module.exports.callback = {
   modal_reply: async (interaction, input = {}) => {
     let cb_modal_reply;
     try {
-      cb_modal_reply = await request({
-        method: 'POST',
+      cb_modal_reply = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
         statusCode: 200,
@@ -193,8 +187,7 @@ module.exports.callback = {
   get_original: async (interaction /*, input = {}*/) => {
     let get_origin;
     try {
-      get_origin = await request({
-        method: 'GET',
+      get_origin = await get({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
         statusCode: 200,
@@ -212,8 +205,7 @@ module.exports.callback = {
   edit_original: async (interaction, input = {}) => {
     let edit_origin;
     try {
-      edit_origin = await request({
-        method: 'PATCH',
+      edit_origin = await patch({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
         statusCode: 200,
@@ -239,8 +231,7 @@ module.exports.callback = {
   delete_original: async (interaction) => {
     let delete_origin;
     try {
-      delete_origin = await request({
-        method: 'DELETE',
+      delete_origin = await del({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
         statusCode: 200,
@@ -268,8 +259,7 @@ module.exports.followup = {
       } else {
         dflags = 0;
       }
-      f_create = await request({
-        method: 'POST',
+      f_create = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}`),
         statusCode: 200,
@@ -301,8 +291,7 @@ module.exports.followup = {
   edit: async (interaction, message = {}, input = {}) => {
     let f_edit;
     try {
-      f_edit = await request({
-        method: 'PATCH',
+      f_edit = await patch({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${message.id}`),
         statusCode: 200,
@@ -329,8 +318,7 @@ module.exports.followup = {
   get: async (interaction, message = {}) => {
     let f_get;
     try {
-      f_get = await request({
-        method: 'GET',
+      f_get = await get({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${message.id}`),
         statusCode: 200,
@@ -348,8 +336,7 @@ module.exports.followup = {
   del: async (interaction, message = {}) => {
     let f_delete_followup;
     try {
-      f_delete_followup = await request({
-        method: 'DELETE',
+      f_delete_followup = await del({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${message.id}`),
         statusCode: 200,
@@ -364,18 +351,56 @@ module.exports.followup = {
   }, //EO INTERACTION FOLLOWUP DELETE
 }; //EO MODULE FOLLOWUP
 
-async function request(params) {
-  return new Promise(async function (resolve, reject) {
-    const https = require('node:https');
-    if (params.method === 'POST' || 'PATCH' || 'DELETE') {
+//method GET
+  async function get(params) => {
+    return new Promise(async function (resolve, reject) {
+      const https = require('node:https');
       const options = {
         host: params.url,
         port: 443,
         path: params.path,
-        method: params.method,
+        method: 'GET',
+        headers: params.headers,
+      };
+      options.agent = new https.Agent(options);
+
+      let req = await https.request(options, async (res) => {
+        let data = '';
+        res.on('data', async (readable) => {
+          data += readable;
+        });
+        res.on('end', async () => {
+          result = {};
+          result.statusCode = res.statusCode;
+          result.headers = res.headers;
+          result.body = data;
+          resolve(result);
+        });
+      });
+      req.on('error', (e) => {
+        console.error(e);
+      });
+      req.end();
+    });
+  };
+  //method POST
+  async function post(params) => {
+    return new Promise(async function (resolve, reject) {
+      const https = require('node:https');
+      const options = {
+        host: params.url,
+        port: 443,
+        path: params.path,
+        method: 'POST',
         headers: {
-          'Content-Type': params.headers['Content-Type'] ?? params.headers['content-type'],
-          'Content-Length': Buffer.byteLength(params.body),
+          'Content-Type':
+            params.headers['Content-Type'] ??
+            params.headers['content-type'] ??
+            '',
+          'Content-Length':
+            params.headers['Content-Length'] ??
+            params.headers['content-length'] ??
+            Buffer.byteLength(params.body),
         },
       };
       options.agent = new https.Agent(options);
@@ -398,15 +423,26 @@ async function request(params) {
       });
       req.write(params.body);
       req.end();
-    }
-    else if (params.method === 'GET') {
+    });
+  };
+  //method PATCH
+  async function patch(params) => {
+    return new Promise(async function (resolve, reject) {
+      const https = require('node:https');
       const options = {
         host: params.url,
         port: 443,
         path: params.path,
-        method: params.method,
+        method: 'PATCH',
         headers: {
-          'Content-Type': params.headers['Content-Type'] ?? params.headers['content-type'],
+          'Content-Type':
+            params.headers['Content-Type'] ??
+            params.headers['content-type'] ??
+            '',
+          'Content-Length':
+            params.headers['Content-Length'] ??
+            params.headers['content-length'] ??
+            Buffer.byteLength(params.body),
         },
       };
       options.agent = new https.Agent(options);
@@ -427,7 +463,49 @@ async function request(params) {
       req.on('error', (e) => {
         console.error(e);
       });
+      req.write(params.body);
       req.end();
-    }
-  });
-}
+    });
+  };
+  //method DELETE
+  async function del(params) => {
+    return new Promise(async function (resolve, reject) {
+      const https = require('node:https');
+      const options = {
+        host: params.url,
+        port: 443,
+        path: params.path,
+        method: 'DELETE',
+        headers: {
+          'Content-Type':
+            params.headers['Content-Type'] ??
+            params.headers['content-type'] ??
+            '',
+          'Content-Length':
+            params.headers['Content-Length'] ??
+            params.headers['content-length'] ??
+            Buffer.byteLength(params.body),
+        },
+      };
+      options.agent = new https.Agent(options);
+
+      let req = await https.request(options, async (res) => {
+        let data = '';
+        res.on('data', async (readable) => {
+          data += readable;
+        });
+        res.on('end', async () => {
+          result = {};
+          result.statusCode = res.statusCode;
+          result.headers = res.headers;
+          result.body = data;
+          resolve(result);
+        });
+      });
+      req.on('error', (e) => {
+        console.error(e);
+      });
+      req.write(params.body);
+      req.end();
+    });
+  };

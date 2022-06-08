@@ -1,6 +1,12 @@
 # Discord Interactions.
 #### Discord Interactions with Native Webhook handling for a zero dependancy solution.  
 
+!!!! I am changing the format of this version !!!!  
+
+I will be moving the ephemeral selector to reside above 'content:'  
+
+**PLEASE BE AWARE**
+
 
 ### Callbacks:
 **https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type**  
