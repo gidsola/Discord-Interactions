@@ -352,7 +352,7 @@ module.exports.followup = {
 }; //EO MODULE FOLLOWUP
 
 //method GET
-  async function get(params) => {
+  async function get(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {
@@ -384,7 +384,7 @@ module.exports.followup = {
     });
   };
   //method POST
-  async function post(params) => {
+  async function post(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {
@@ -426,7 +426,7 @@ module.exports.followup = {
     });
   };
   //method PATCH
-  async function patch(params) => {
+  async function patch(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {
@@ -468,7 +468,7 @@ module.exports.followup = {
     });
   };
   //method DELETE
-  async function del(params) => {
+  async function del(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {
