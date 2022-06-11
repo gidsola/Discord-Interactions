@@ -1,8 +1,8 @@
-# Discord Interactions.
-#### Discord Interactions with Native Webhook handling for a zero dependancy solution.  
+# Discord Interactions Zero
+**Discord Interactions implement for Autocode with native webhook handling providing a zero dependency solution.**  
 
 Update 2.0.2 Brings a new format to use.  
-```  
+```js  
 await interaction.callback.defer(event, {ephemeral: true});  
 
 await interaction.followup.create(event, {
@@ -10,7 +10,7 @@ await interaction.followup.create(event, {
   content: 'Your suggestion has been noted, Thank You',
 });  
 ```
-It is the same for all callbacks & followups. ONLY the defers remain unchanged.
+ONLY the defers remain unchanged.  
 This format also agrees with the auto-formatter :)
 
 
@@ -40,7 +40,7 @@ This format also agrees with the auto-formatter :)
 | followup.get  | Returns a followup message for an Interaction.  |
 | followup.del  | Deletes a followup message for an Interaction.  |
 
-### Code Examples:
+### Examples:
 
 ```js  
 const interaction = require('discord-interactions-zero');  
@@ -51,8 +51,9 @@ await interaction.callback.defer(event, {ephemeral: false});
 
   if (stuff) {
     try {
-      await interaction.followup.create(event, {ephemeral: false}, {
-          content: stuff,
+      await interaction.followup.create(event, {
+        ephemeral: false,
+        content: stuff,
       });
     } catch (e) {
       console.log(e);
@@ -87,58 +88,58 @@ await interaction.callback.modal_reply(event, {
 ```js
 const interaction = require('discord-interactions-zero');
 
-await interaction.callback.reply(event, {ephemeral: true}, {
-      content: '',
-      embeds: [
-        {
-          type: `rich`,
-          title: `title`,
-          description: `description.`,
-          color: 0x082020,
-          thumbnail: {
-            url: `https://`,
-            height: 0,
-            width: 0,
-          },
-          author: {
-            name: `author`,
-          },
-          footer: {
-            text: `footer text goes here, you can make it substantial.`,
-            icon_url: `https://`,
-          },
-        },
-      ],
+await interaction.callback.reply(event, {
+  ephemeral: true,
+  content: '',
+  embeds: [
+    {
+      type: `rich`,
+      title: `title`,
+      description: `description.`,
+      color: 0x082020,
+      thumbnail: {
+        url: `https://`,
+        height: 0,
+        width: 0,
+      },
+      author: {
+        name: `author`,
+      },
+      footer: {
+        text: `footer text goes here, you can make it substantial.`,
+        icon_url: `https://`,
+      },
+    },
+  ],
+  components: [
+    {
+      type: 1,
       components: [
         {
-          type: 1,
-          components: [
-            {
-              style: 2,
-              label: `label`,
-              custom_id: `id`,
-              disabled: false,
-              type: 2,
-            },
-            {
-              style: 2,
-              label: `label`,
-              custom_id: `id`,
-              disabled: false,
-              type: 2,
-            },
-            {
-              style: 2,
-              label: `label`,
-              custom_id: `id`,
-              disabled: false,
-              type: 2,
-            },
-          ],
+          style: 2,
+          label: `label`,
+          custom_id: `id`,
+          disabled: false,
+          type: 2,
+        },
+        {
+          style: 2,
+          label: `label`,
+          custom_id: `id`,
+          disabled: false,
+          type: 2,
+        },
+        {
+          style: 2,
+          label: `label`,
+          custom_id: `id`,
+          disabled: false,
+          type: 2,
         },
       ],
-    }
-  );
+    },
+  ],
+});
 ```
 
 
@@ -148,7 +149,8 @@ const interaction = require('discord-interactions-zero');
 await interaction.callback.component_defer(event, {ephemeral: true});
 
   if (!event.member.roles.includes(roleid)) {
-    await interaction.followup.edit(event, {id: @message.id}, {
+    await interaction.followup.edit(event, {
+      message_id: @message.id,
       content: ``,
       embeds: [
         {
