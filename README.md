@@ -164,6 +164,9 @@ await interaction.callback.component_defer(event, {ephemeral: true});
     });  
 ```  
 
+My hiding place on Discord:  
+https://dsc.gg/house-of-ghastli
+
 
 Created in:
 [![Created in Autocode. (https://Autocode.com)](https://content.public.files.stdlib.com/shared/static/branding/autocode-logo.svg "Autocode")](https://Autocode.com) Autocode.
