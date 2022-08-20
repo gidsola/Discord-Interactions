@@ -194,6 +194,7 @@ module.exports.callback = {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: '',
       });
     } catch (e) {
       console.log(e);
@@ -238,6 +239,7 @@ module.exports.callback = {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: '',
       });
     } catch (e) {
       console.log(e);
@@ -325,6 +327,7 @@ module.exports.followup = {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: '',
       });
     } catch (e) {
       console.log(e);
@@ -343,6 +346,7 @@ module.exports.followup = {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: '',
       });
     } catch (e) {
       console.log(e);
