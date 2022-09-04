@@ -482,7 +482,7 @@ async function get(params) {
     };
     options.agent = new https.Agent(options);
 
-    let req = await request(options, async (res) => {
+    let req = await https.request(options, async (res) => {
       let data = '';
       res.on('data', async (readable) => {
         data += readable;
@@ -523,7 +523,7 @@ async function post(params) {
     };
     options.agent = new https.Agent(options);
 
-    let req = await request(options, async (res) => {
+    let req = await https.request(options, async (res) => {
       let data = '';
       res.on('data', async (readable) => {
         data += readable;
@@ -565,7 +565,7 @@ async function patch(params) {
     };
     options.agent = new https.Agent(options);
 
-    let req = await request(options, async (res) => {
+    let req = await https.request(options, async (res) => {
       let data = '';
       res.on('data', async (readable) => {
         data += readable;
@@ -607,7 +607,7 @@ async function del(params) {
     };
     options.agent = new https.Agent(options);
 
-    let req = await request(options, async (res) => {
+    let req = await https.request(options, async (res) => {
       let data = '';
       res.on('data', async (readable) => {
         data += readable;
