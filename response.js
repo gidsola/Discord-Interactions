@@ -2,11 +2,21 @@
 /**           INTERACTION CALLBACKS               **/
 /***************************************************/
 module.exports.callback = {
-  //CHANNEL_MESSAGE_WITH_SOURCE	=== (4) //respond to an interaction with a message
-  reply: async (interaction, input = {}) => {
+  /**
+   * The `reply()` method is used to immediately respond and reply to an interaction.
+   * 
+   * Callback Type: `4`, -- `CHANNEL_MESSAGE_WITH_SOURCE`
+   * 
+   * @param {object} interaction 
+   * @param {object} input 
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+   */
+  async reply(interaction, input = {}) {
     let cb_reply;
     try {
-      if (input.ephemeral === true) {
+      if (input.ephemeral) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -35,13 +45,29 @@ module.exports.callback = {
       console.log(e);
     }
     return cb_reply;
-  }, // EO reply
+  },
 
-  //DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE === (5) //ACK an interaction and edit a response later, the user sees a loading state
-  defer: async (interaction, input = {}) => {
+  /**
+   * The `defer()` method is used to acknowledge an interaction and wait for a followup. User sees a thinking/loading state.
+   * 
+   * Callback Type: `5`, -- `DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE`
+   * 
+   * @param {object} interaction 
+   * @param {object} input 
+   * defer method only accepts an ephemeral boolean.
+   * 
+   * example:
+   * ```js 
+   * callback.defer(interaction,{ ephemeral: true }); 
+   * ```
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+   */
+  async defer(interaction, input = {}) {
     let cb_defer;
     try {
-      if (input.ephemeral === true) {
+      if (input.ephemeral) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -64,13 +90,28 @@ module.exports.callback = {
       console.log(e);
     }
     return cb_defer;
-  }, // EO defer
+  },
 
-  //DEFERRED_UPDATE_MESSAGE* === (6)	for components, //ACK an interaction and edit the original message later; the user does not see a loading state
-  component_defer: async (interaction, input = {}) => {
+  /**
+   * The `component_defer()` method is used to acknowledge a component interaction and wait for a followup. User does NOT see a thinking/loading state.
+   * 
+   * Callback Type: `6`, -- `DEFERRED_UPDATE_MESSAGE` *for components
+   * 
+   * @param {object} interaction 
+   * @param {object} input only accepts a boolean ephemeral.
+   * 
+   * example:
+   * ```js 
+   * callback.component_defer(interaction,{ ephemeral: true }); 
+   * ```
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+   */
+  async component_defer(interaction, input = {}) {
     let cb_comp_defer;
     try {
-      if (input.ephemeral === true) {
+      if (input.ephemeral) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -84,20 +125,30 @@ module.exports.callback = {
         },
         body: JSON.stringify({
           type: 6,
-          data: {flags: dflags},
+          data: { flags: dflags },
         }),
       });
     } catch (e) {
       console.log(e);
     }
     return cb_comp_defer;
-  }, // EO component_defer
+  },
 
-  //UPDATE_MESSAGE*	=== (7)	for components, //edit the message the component was attached to
-  component_update: async (interaction, input = {}) => {
+  /**
+   * The `component_update()` method allows editing of the components parent message.
+   * 
+   * Callback Type: `7`, -- `UPDATE_MESSAGE` *for components
+   * 
+   * @param {object} interaction 
+   * @param {object} input 
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+   */
+  async component_update(interaction, input = {}) {
     let cb_comp_update;
     try {
-      if (input.ephemeral === true) {
+      if (input.ephemeral) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -126,13 +177,23 @@ module.exports.callback = {
       console.log(e);
     }
     return cb_comp_update;
-  }, // EO component_update
+  },
 
-  //APPLICATION_COMMAND_AUTOCOMPLETE_RESULT === (8) //respond to an autocomplete interaction with suggested choices
-  autocomplete_reply: async (interaction, input = {}) => {
+  /**
+   * The `autocomplete_reply()` method responds to an autocomplete interaction with suggested choices
+   * 
+   * Callback Type: `8`, -- `APPLICATION_COMMAND_AUTOCOMPLETE_RESULT`
+   * 
+   * @param {object} interaction 
+   * @param {object} input 
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+   */
+  async autocomplete_reply(interaction, input = {}) {
     let cb_auto_reply;
     try {
-      if (input.ephemeral === true) {
+      if (input.ephemeral) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -155,10 +216,20 @@ module.exports.callback = {
       console.log(e);
     }
     return cb_auto_reply;
-  }, // EO autocomplete_reply
+  },
 
-  //MODAL**	=== (9)	respond to an interaction with a popup modal
-  modal_reply: async (interaction, input = {}) => {
+  /**
+   * The `modal_reply()` method responds to an interaction with a popup modal
+   * 
+   * Callback Type: `9`, -- `MODAL`
+   * 
+   * @param {object} interaction 
+   * @param {object} input 
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+   */
+  async modal_reply(interaction, input = {}) {
     let cb_modal_reply;
     try {
       cb_modal_reply = await post({
@@ -181,10 +252,17 @@ module.exports.callback = {
       console.log(e);
     }
     return cb_modal_reply;
-  }, //EO modal_reply
+  },
 
-  //Get Original Interaction Response
-  get_original: async (interaction) => {
+  /**
+   * The `get_original()` method is used to return the initial Interaction response.
+   * 
+   * @param {object} interaction 
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
+   */
+  async get_original(interaction) {
     let get_origin;
     try {
       get_origin = await get({
@@ -200,10 +278,18 @@ module.exports.callback = {
       console.log(e);
     }
     return JSON.parse(get_origin.body.toString());
-  }, //Get Original Interaction Response
+  },
 
-  //Edit Original Interaction Response
-  edit_original: async (interaction, input = {}) => {
+  /**
+   * The `edit_original()` method is used to edit the initial Interaction response.
+   * 
+   * @param {object} interaction 
+   * @param {object} input
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
+   */
+  async edit_original(interaction, input = {}) {
     let edit_origin;
     try {
       edit_origin = await patch({
@@ -226,10 +312,17 @@ module.exports.callback = {
       console.log(e);
     }
     return JSON.parse(edit_origin.body.toString());
-  }, //Edit Original Interaction Response
+  },
 
-  //Delete Original Interaction Response
-  delete_original: async (interaction) => {
+  /**
+   * The `delete_original()` method is used to delete the initial Interaction response.
+   * 
+   * @param {object} interaction 
+   * @returns Promise
+   * 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
+   */
+  async delete_original(interaction) {
     let delete_origin;
     try {
       delete_origin = await del({
@@ -245,18 +338,23 @@ module.exports.callback = {
       console.log(e);
     }
     return delete_origin;
-  }, //Delete Original Interaction Response
-}; //EO MODULE CALLBACK
+  },
+};
 
 /***************************************************/
 /**           INTERACTION FOLLOWUPS               **/
 /***************************************************/
 module.exports.followup = {
-  //FOLLOWUP_CREATE
-  create: async (interaction, input = {}) => {
+  /**
+   * The `create()` method is used to edit an initially deferred interaction, following up with a new response.
+   * @param {object} interaction 
+   * @param {object} input 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
+   */
+  async create(interaction, input = {}) {
     let f_create;
     try {
-      if (input.ephemeral === true) {
+      if (input.ephemeral) {
         dflags = 64;
       } else {
         dflags = 0;
@@ -287,10 +385,15 @@ module.exports.followup = {
       console.log(e);
     }
     return f_create;
-  }, // EO INTERACTION FOLLOWUP
+  },
 
-  //FOLLOWUP_EDIT
-  edit: async (interaction, input = {}) => {
+  /**
+   * The `edit()` method is used to edit a followup message for an Interaction.
+   * @param {object} interaction 
+   * @param {object} input 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
+   */
+  async edit(interaction, input = {}) {
     let f_edit;
     try {
       f_edit = await patch({
@@ -314,10 +417,15 @@ module.exports.followup = {
       console.log(e);
     }
     return f_edit;
-  }, //EO INTERACTION FOLLOWUP EDIT
+  },
 
-  //FOLLOWUP_GET
-  get: async (interaction, input = {}) => {
+  /**
+   * The `get()` method is used to retrieve a followup message for an Interaction.
+   * @param {object} interaction 
+   * @param {object} input 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
+   */
+  async get(interaction, input = {}) {
     let f_get;
     try {
       f_get = await get({
@@ -333,10 +441,15 @@ module.exports.followup = {
       console.log(e);
     }
     return f_get;
-  }, //EO INTERACTION FOLLOWUP GET
+  },
 
-  //FOLLOWUP_DELETE
-  del: async (interaction, input = {}) => {
+  /**
+   * The `del()` method is used to delete the followup message for an Interaction.
+   * @param {object} interaction 
+   * @param {object} input 
+   * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
+   */
+  async del(interaction, input = {}) {
     let f_delete_followup;
     try {
       f_delete_followup = await del({
@@ -352,164 +465,165 @@ module.exports.followup = {
       console.log(e);
     }
     return f_delete_followup;
-  }, //EO INTERACTION FOLLOWUP DELETE
-}; //EO MODULE FOLLOWUP
+  },
+};
+
 
 //method GET
-  async function get(params) {
-    return new Promise(async function (resolve, reject) {
-      const https = require('node:https');
-      const options = {
-        host: params.url,
-        port: 443,
-        path: params.path,
-        method: 'GET',
-        headers: params.headers,
-      };
-      options.agent = new https.Agent(options);
+async function get(params) {
+  return new Promise(async function (resolve, reject) {
+    const https = require('node:https');
+    const options = {
+      host: params.url,
+      port: 443,
+      path: params.path,
+      method: 'GET',
+      headers: params.headers,
+    };
+    options.agent = new https.Agent(options);
 
-      let req = await https.request(options, async (res) => {
-        let data = '';
-        res.on('data', async (readable) => {
-          data += readable;
-        });
-        res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
-          resolve(result);
-        });
+    let req = await request(options, async (res) => {
+      let data = '';
+      res.on('data', async (readable) => {
+        data += readable;
       });
-      req.on('error', (e) => {
-        console.error(e);
+      res.on('end', async () => {
+        result = {};
+        result.statusCode = res.statusCode;
+        result.headers = res.headers;
+        result.body = data;
+        resolve(result);
       });
-      req.end();
     });
-  };
-  //method POST
-  async function post(params) {
-    return new Promise(async function (resolve, reject) {
-      const https = require('node:https');
-      const options = {
-        host: params.url,
-        port: 443,
-        path: params.path,
-        method: 'POST',
-        headers: {
-          'Content-Type':
-            params.headers['Content-Type'] ??
-            params.headers['content-type'] ??
-            '',
-          'Content-Length':
-            params.headers['Content-Length'] ??
-            params.headers['content-length'] ??
-            Buffer.byteLength(params.body),
-        },
-      };
-      options.agent = new https.Agent(options);
+    req.on('error', (e) => {
+      console.error(e);
+    });
+    req.end();
+  });
+};
+//method POST
+async function post(params) {
+  return new Promise(async function (resolve, reject) {
+    const https = require('node:https');
+    const options = {
+      host: params.url,
+      port: 443,
+      path: params.path,
+      method: 'POST',
+      headers: {
+        'Content-Type':
+          params.headers['Content-Type'] ??
+          params.headers['content-type'] ??
+          '',
+        'Content-Length':
+          params.headers['Content-Length'] ??
+          params.headers['content-length'] ??
+          Buffer.byteLength(params.body),
+      },
+    };
+    options.agent = new https.Agent(options);
 
-      let req = await https.request(options, async (res) => {
-        let data = '';
-        res.on('data', async (readable) => {
-          data += readable;
-        });
-        res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
-          resolve(result);
-        });
+    let req = await request(options, async (res) => {
+      let data = '';
+      res.on('data', async (readable) => {
+        data += readable;
       });
-      req.on('error', (e) => {
-        console.error(e);
+      res.on('end', async () => {
+        result = {};
+        result.statusCode = res.statusCode;
+        result.headers = res.headers;
+        result.body = data;
+        resolve(result);
       });
-      req.write(params.body);
-      req.end();
     });
-  };
-  //method PATCH
-  async function patch(params) {
-    return new Promise(async function (resolve, reject) {
-      const https = require('node:https');
-      const options = {
-        host: params.url,
-        port: 443,
-        path: params.path,
-        method: 'PATCH',
-        headers: {
-          'Content-Type':
-            params.headers['Content-Type'] ??
-            params.headers['content-type'] ??
-            '',
-          'Content-Length':
-            params.headers['Content-Length'] ??
-            params.headers['content-length'] ??
-            Buffer.byteLength(params.body),
-        },
-      };
-      options.agent = new https.Agent(options);
+    req.on('error', (e) => {
+      console.error(e);
+    });
+    req.write(params.body);
+    req.end();
+  });
+};
+//method PATCH
+async function patch(params) {
+  return new Promise(async function (resolve, reject) {
+    const https = require('node:https');
+    const options = {
+      host: params.url,
+      port: 443,
+      path: params.path,
+      method: 'PATCH',
+      headers: {
+        'Content-Type':
+          params.headers['Content-Type'] ??
+          params.headers['content-type'] ??
+          '',
+        'Content-Length':
+          params.headers['Content-Length'] ??
+          params.headers['content-length'] ??
+          Buffer.byteLength(params.body),
+      },
+    };
+    options.agent = new https.Agent(options);
 
-      let req = await https.request(options, async (res) => {
-        let data = '';
-        res.on('data', async (readable) => {
-          data += readable;
-        });
-        res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
-          resolve(result);
-        });
+    let req = await request(options, async (res) => {
+      let data = '';
+      res.on('data', async (readable) => {
+        data += readable;
       });
-      req.on('error', (e) => {
-        console.error(e);
+      res.on('end', async () => {
+        result = {};
+        result.statusCode = res.statusCode;
+        result.headers = res.headers;
+        result.body = data;
+        resolve(result);
       });
-      req.write(params.body);
-      req.end();
     });
-  };
-  //method DELETE
-  async function del(params) {
-    return new Promise(async function (resolve, reject) {
-      const https = require('node:https');
-      const options = {
-        host: params.url,
-        port: 443,
-        path: params.path,
-        method: 'DELETE',
-        headers: {
-          'Content-Type':
-            params.headers['Content-Type'] ??
-            params.headers['content-type'] ??
-            '',
-          'Content-Length':
-            params.headers['Content-Length'] ??
-            params.headers['content-length'] ??
-            Buffer.byteLength(params.body),
-        },
-      };
-      options.agent = new https.Agent(options);
+    req.on('error', (e) => {
+      console.error(e);
+    });
+    req.write(params.body);
+    req.end();
+  });
+};
+//method DELETE
+async function del(params) {
+  return new Promise(async function (resolve, reject) {
+    const https = require('node:https');
+    const options = {
+      host: params.url,
+      port: 443,
+      path: params.path,
+      method: 'DELETE',
+      headers: {
+        'Content-Type':
+          params.headers['Content-Type'] ??
+          params.headers['content-type'] ??
+          '',
+        'Content-Length':
+          params.headers['Content-Length'] ??
+          params.headers['content-length'] ??
+          Buffer.byteLength(params.body),
+      },
+    };
+    options.agent = new https.Agent(options);
 
-      let req = await https.request(options, async (res) => {
-        let data = '';
-        res.on('data', async (readable) => {
-          data += readable;
-        });
-        res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
-          resolve(result);
-        });
+    let req = await request(options, async (res) => {
+      let data = '';
+      res.on('data', async (readable) => {
+        data += readable;
       });
-      req.on('error', (e) => {
-        console.error(e);
+      res.on('end', async () => {
+        result = {};
+        result.statusCode = res.statusCode;
+        result.headers = res.headers;
+        result.body = data;
+        resolve(result);
       });
-      req.write(params.body);
-      req.end();
     });
-  };
+    req.on('error', (e) => {
+      console.error(e);
+    });
+    req.write(params.body);
+    req.end();
+  });
+};
