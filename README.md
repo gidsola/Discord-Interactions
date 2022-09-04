@@ -1,5 +1,5 @@
 # Discord Interactions Zero
-**Discord Interactions implement for Autocode with native webhook handling providing a zero dependency solution.**  
+**Discord Interactions with Native Webhook handling for a zero dependancy solution.**  
 
 Update 2.0.2 Brings a new format to use.  
 ```js  
@@ -168,5 +168,5 @@ My hiding place on Discord:
 https://dsc.gg/house-of-ghastli
 
 
-Created in:
-[![Created in Autocode. (https://Autocode.com)](https://content.public.files.stdlib.com/shared/static/branding/autocode-logo.svg "Autocode")](https://Autocode.com) Autocode.
+Proud supporter of 
+[![Proud supporter of Autocode. (https://Autocode.com)](https://content.public.files.stdlib.com/shared/static/branding/autocode-logo.svg "Autocode")](https://Autocode.com) Autocode.
