@@ -16,11 +16,7 @@ module.exports.callback = {
   async reply(interaction, input = {}) {
     let cb_reply;
     try {
-      if (input.ephemeral) {
-        dflags = 64;
-      } else {
-        dflags = 0;
-      }
+      let dflags = (input.ephemeral) ? 64 : 0;
       cb_reply = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
@@ -67,11 +63,7 @@ module.exports.callback = {
   async defer(interaction, input = {}) {
     let cb_defer;
     try {
-      if (input.ephemeral) {
-        dflags = 64;
-      } else {
-        dflags = 0;
-      }
+      let dflags = (input.ephemeral) ? 64 : 0;
       cb_defer = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
@@ -111,11 +103,7 @@ module.exports.callback = {
   async component_defer(interaction, input = {}) {
     let cb_comp_defer;
     try {
-      if (input.ephemeral) {
-        dflags = 64;
-      } else {
-        dflags = 0;
-      }
+      let dflags = (input.ephemeral) ? 64 : 0;
       cb_comp_defer = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
@@ -148,11 +136,7 @@ module.exports.callback = {
   async component_update(interaction, input = {}) {
     let cb_comp_update;
     try {
-      if (input.ephemeral) {
-        dflags = 64;
-      } else {
-        dflags = 0;
-      }
+      let dflags = (input.ephemeral) ? 64 : 0;
       cb_comp_update = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
@@ -193,11 +177,7 @@ module.exports.callback = {
   async autocomplete_reply(interaction, input = {}) {
     let cb_auto_reply;
     try {
-      if (input.ephemeral) {
-        dflags = 64;
-      } else {
-        dflags = 0;
-      }
+      let dflags = (input.ephemeral) ? 64 : 0;
       cb_auto_reply = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
@@ -354,11 +334,7 @@ module.exports.followup = {
   async create(interaction, input = {}) {
     let f_create;
     try {
-      if (input.ephemeral) {
-        dflags = 64;
-      } else {
-        dflags = 0;
-      }
+      let dflags = (input.ephemeral) ? 64 : 0;
       f_create = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}`),
