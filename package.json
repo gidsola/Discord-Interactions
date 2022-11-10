@@ -1,6 +1,6 @@
 {
   "name": "discord-interactions-zero",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Discord Interactions with Native Webhook handling for a zero dependancy solution.",
   "main": "response.js",
   "scripts": {
