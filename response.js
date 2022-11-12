@@ -34,7 +34,7 @@ module.exports.callback = {
           'Content-Type': 'application/json',
         },
         body: (input?.attachments && input?.attachments?.length)
-          ? { data: form }
+          ? JSON.stringify({ data: form })
           : (() => {
             let body = JSON.stringify({
               type: 4,
@@ -480,45 +480,47 @@ async function get(params) {
 };
 //method POST
 async function post(params) {
-  return new Promise(async function (resolve, reject) {
-    const https = require('node:https');
-    const options = {
-      host: params.url,
-      port: 443,
-      path: params.path,
-      method: 'POST',
-      headers: {
-        'Content-Type':
-          params.headers['Content-Type'] ??
-          params.headers['content-type'] ??
-          '',
-        'Content-Length':
-          params.headers['Content-Length'] ??
-          params.headers['content-length'] ??
-          Buffer.byteLength(params.body),
-      },
-    };
-    options.agent = new https.Agent(options);
+  try {
+    return new Promise(async function (resolve, reject) {
+      const https = require('node:https');
+      const options = {
+        host: params.url,
+        port: 443,
+        path: params.path,
+        method: 'POST',
+        headers: {
+          'Content-Type':
+            params.headers['Content-Type'] ??
+            params.headers['content-type'] ??
+            '',
+          'Content-Length':
+            params.headers['Content-Length'] ??
+            params.headers['content-length'] ??
+            Buffer.byteLength(params.body),
+        },
+      };
+      options.agent = new https.Agent(options);
 
-    let req = await https.request(options, async (res) => {
-      let data = '';
-      res.on('data', async (readable) => {
-        data += readable;
+      let req = await https.request(options, async (res) => {
+        let data = '';
+        res.on('data', async (readable) => {
+          data += readable;
+        });
+        res.on('end', async () => {
+          result = {};
+          result.statusCode = res.statusCode;
+          result.headers = res.headers;
+          result.body = data;
+          resolve(result);
+        });
       });
-      res.on('end', async () => {
-        result = {};
-        result.statusCode = res.statusCode;
-        result.headers = res.headers;
-        result.body = data;
-        resolve(result);
+      req.on('error', (e) => {
+        console.error(e);
       });
+      req.write(params.body);
+      req.end();
     });
-    req.on('error', (e) => {
-      console.error(e);
-    });
-    req.write(params.body);
-    req.end();
-  });
+  } catch (e) { console.log('errors', e) }
 };
 //method PATCH
 async function patch(params) {
@@ -612,14 +614,19 @@ async function del(params) {
 async function attach(params) {
   const FormData = require('form-data');
   let form = new FormData();
-  params.attachments = params.attachments.map((a, index) => ({
-    id: index,
-    filename: a.filename,
-    description: a.description ?? '',
-  }));
-  for (let i = 0; i < params.attachments.length; i++) {
-    form.append(`files[${i}]`, params.attachments[i].buffer, params.attachments[i].filename
-    );
+  try {
+    for (let i = 0; i < params.attachments.length; i++) {
+      form.append(`files[${i}]`, params.attachments[i].file,
+        `${params.attachments[i].filename}`,
+      );
+    }
+    params.attachments = params.attachments.map((a, index) => ({
+      id: index,
+      filename: a.filename,
+      description: a.description ?? '',
+    }));
+  } catch (e) {
+    console.log('error', e);
   }
   return form;
 };
