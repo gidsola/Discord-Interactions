@@ -16,28 +16,40 @@ module.exports.callback = {
   async reply(interaction, input = {}) {
     let cb_reply;
     try {
-      let dflags = (input.ephemeral) ? 64 : 0;
+      let form;
+      if (input?.attachments && input?.attachments?.length) {
+        input.flags = (input.ephemeral) ? (1 << 6) : 0,
+          form = await attach(input);
+        form.append('payload_json', Buffer.from(JSON.stringify({
+          type: 4,
+          data: input,
+        })));
+      }
       cb_reply = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        statusCode: 200,
-        headers: {
+        headers: (input?.attachments && input?.attachments?.length) ? {
+          'Content-Type': 'multipart/form-data',
+        } : {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          type: 4,
-          data: {
-            tts: input.tts,
-            content: input.content,
-            embeds: input.embeds ?? input.embed,
-            allowed_mentions: input.allowed_mentions,
-            flags: dflags,
-            components: input.components,
-            files: input.files ?? null,
-            payload_json: input.payload_json ?? null,
-            attachments: input.attachments,
-          },
-        }),
+        body: (input?.attachments && input?.attachments?.length)
+          ? { data: form }
+          : (() => {
+            let body = JSON.stringify({
+              type: 4,
+              data: {
+                tts: input.tts,
+                content: input.content,
+                embeds: input.embeds ?? input.embed,
+                allowed_mentions: input.allowed_mentions,
+                flags: (input.ephemeral) ? (1 << 6) : 0,
+                components: input.components,
+                attachments: input.attachments,
+              },
+            })
+            return body;
+          })()
       });
     } catch (e) {
       console.log(e);
@@ -65,18 +77,16 @@ module.exports.callback = {
   async defer(interaction, input = {}) {
     let cb_defer;
     try {
-      let dflags = (input.ephemeral) ? 64 : 0;
       cb_defer = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           type: 5,
           data: {
-            flags: dflags
+            flags: (input.ephemeral) ? (1 << 6) : 0,
           },
         }),
       });
@@ -105,17 +115,15 @@ module.exports.callback = {
   async component_defer(interaction, input = {}) {
     let cb_comp_defer;
     try {
-      let dflags = (input.ephemeral) ? 64 : 0;
       cb_comp_defer = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           type: 6,
-          data: { flags: dflags },
+          data: { flags: (input.ephemeral) ? (1 << 6) : 0 },
         }),
       });
     } catch (e) {
@@ -138,11 +146,9 @@ module.exports.callback = {
   async component_update(interaction, input = {}) {
     let cb_comp_update;
     try {
-      let dflags = (input.ephemeral) ? 64 : 0;
       cb_comp_update = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -153,7 +159,7 @@ module.exports.callback = {
             content: input.content,
             embeds: input.embeds ?? input.embed,
             allowed_mentions: input.allowed_mentions,
-            flags: dflags,
+            flags: (input.ephemeral) ? (1 << 6) : 0,
             components: input.components,
             files: input.files ?? null,
             payload_json: input.payload_json ?? null,
@@ -181,11 +187,9 @@ module.exports.callback = {
   async autocomplete_reply(interaction, input = {}) {
     let cb_auto_reply;
     try {
-      let dflags = (input.ephemeral) ? 64 : 0;
       cb_auto_reply = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -219,7 +223,6 @@ module.exports.callback = {
       cb_modal_reply = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -252,7 +255,6 @@ module.exports.callback = {
       get_origin = await get({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -279,7 +281,6 @@ module.exports.callback = {
       edit_origin = await patch({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -314,7 +315,6 @@ module.exports.callback = {
       delete_origin = await del({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -340,11 +340,9 @@ module.exports.followup = {
   async create(interaction, input = {}) {
     let f_create;
     try {
-      let dflags = (input.ephemeral) ? 64 : 0;
       f_create = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -360,7 +358,7 @@ module.exports.followup = {
           files: input.files ?? null,
           payload_json: input.payload_json ?? null,
           attachments: input.attachments,
-          flags: dflags,
+          flags: (input.ephemeral) ? (1 << 6) : 0,
         }),
       });
     } catch (e) {
@@ -381,7 +379,6 @@ module.exports.followup = {
       f_edit = await patch({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -413,7 +410,6 @@ module.exports.followup = {
       f_get = await get({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -437,7 +433,6 @@ module.exports.followup = {
       f_delete_followup = await del({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
-        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -608,4 +603,23 @@ async function del(params) {
     req.write(params.body);
     req.end();
   });
+};
+
+/**
+ * Attachment handler for Interactions. 
+ * Thanks LostMyInfo :)
+ */
+async function attach(params) {
+  let form = new FormData();
+  for (let i = 0; i < params.attachments.length; i++) {
+    form.append(`files[${i}]`, params.attachments[i].buffer, {
+      filename: params.attachments[i].name,
+    });
+  }
+  params.attachments = params.attachments.map((a, index) => ({
+    id: index,
+    filename: a.name,
+    description: a.description ? a.description : '',
+  }));
+  return form;
 };
