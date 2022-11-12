@@ -613,14 +613,13 @@ async function attach(params) {
   const FormData = require('form-data');
   let form = new FormData();
   for (let i = 0; i < params.attachments.length; i++) {
-    form.append(`files[${i}]`, params.attachments[i].buffer, {
-      filename: params.attachments[i].filename,
-    });
+    form.append(`files[${i}]`, params.attachments[i].buffer, params.attachments[i].filename,
+    );
   }
   params.attachments = params.attachments.map((a, index) => ({
     id: index,
     filename: a.filename,
-    description: a.description ? a.description : '',
+    description: a.description ?? '',
   }));
   return form;
 };
