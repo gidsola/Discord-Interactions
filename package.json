@@ -1,6 +1,6 @@
 {
   "name": "discord-interactions-zero",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Discord Interactions with Native Webhook handling for a zero dependancy solution.",
   "main": "response.js",
   "scripts": {
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/gidsola/Discord-Interactions/issues"
   },
-  "homepage": "https://github.com/gidsola/Discord-Interactions#readme"
+  "homepage": "https://github.com/gidsola/Discord-Interactions#readme",
+  "dependencies": {
+    "form-data": "^4.0.0"
+  }
 }
