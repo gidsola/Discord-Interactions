@@ -16,41 +16,28 @@ module.exports.callback = {
   async reply(interaction, input = {}) {
     let cb_reply;
     try {
-      let form;
-      if (input?.attachments && input?.attachments?.length) {
-        input.flags = (input.ephemeral) ? (1 << 6) : 0,
-          form = await attach(input);
-        form.append('payload_json', Buffer.from(JSON.stringify({
-          type: 4,
-          data: input,
-        })));
-      }
-      cb_reply = await post({
-        url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: (input?.attachments && input?.attachments?.length) ? {
-          'Content-Type': 'multipart/form-data',
-        } : {
-          'Content-Type': 'application/json',
-        },
-        body: (input?.attachments && input?.attachments?.length)
-          ? JSON.stringify({ data: form })
-          : (() => {
-            let body = JSON.stringify({
-              type: 4,
-              data: {
-                tts: input.tts,
-                content: input.content,
-                embeds: input.embeds ?? input.embed,
-                allowed_mentions: input.allowed_mentions,
-                flags: (input.ephemeral) ? (1 << 6) : 0,
-                components: input.components,
-                attachments: input.attachments,
-              },
-            })
-            return body;
-          })()
-      });
+      const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
+      (input?.attachments && input?.attachments?.length)
+        ? await sendAttachment(input, url, 'post', 4, (input.ephemeral) ? (1 << 6) : 0)
+        : cb_reply = await post({
+          url: encodeURI(`discord.com`),
+          path: encodeURI(url),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 4,
+            data: {
+              tts: input.tts,
+              content: input.content,
+              embeds: input.embeds ?? input.embed,
+              allowed_mentions: input.allowed_mentions,
+              flags: (input.ephemeral) ? (1 << 6) : 0,
+              components: input.components,
+              attachments: input.attachments,
+            },
+          }),
+        });
     } catch (e) {
       console.log(e);
     }
@@ -480,47 +467,45 @@ async function get(params) {
 };
 //method POST
 async function post(params) {
-  try {
-    return new Promise(async function (resolve, reject) {
-      const https = require('node:https');
-      const options = {
-        host: params.url,
-        port: 443,
-        path: params.path,
-        method: 'POST',
-        headers: {
-          'Content-Type':
-            params.headers['Content-Type'] ??
-            params.headers['content-type'] ??
-            '',
-          'Content-Length':
-            params.headers['Content-Length'] ??
-            params.headers['content-length'] ??
-            Buffer.byteLength(params.body),
-        },
-      };
-      options.agent = new https.Agent(options);
+  return new Promise(async function (resolve, reject) {
+    const https = require('node:https');
+    const options = {
+      host: params.url,
+      port: 443,
+      path: params.path,
+      method: 'POST',
+      headers: {
+        'Content-Type':
+          params.headers['Content-Type'] ??
+          params.headers['content-type'] ??
+          '',
+        'Content-Length':
+          params.headers['Content-Length'] ??
+          params.headers['content-length'] ??
+          Buffer.byteLength(params.body),
+      },
+    };
+    options.agent = new https.Agent(options);
 
-      let req = await https.request(options, async (res) => {
-        let data = '';
-        res.on('data', async (readable) => {
-          data += readable;
-        });
-        res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
-          resolve(result);
-        });
+    let req = await https.request(options, async (res) => {
+      let data = '';
+      res.on('data', async (readable) => {
+        data += readable;
       });
-      req.on('error', (e) => {
-        console.error(e);
+      res.on('end', async () => {
+        result = {};
+        result.statusCode = res.statusCode;
+        result.headers = res.headers;
+        result.body = data;
+        resolve(result);
       });
-      req.write(params.body);
-      req.end();
     });
-  } catch (e) { console.log('errors', e) }
+    req.on('error', (e) => {
+      console.error(e);
+    });
+    req.write(params.body);
+    req.end();
+  });
 };
 //method PATCH
 async function patch(params) {
@@ -609,24 +594,33 @@ async function del(params) {
 
 /**
  * Attachment handler for Interactions. 
+ * 
  * Thanks LostMyInfo :)
  */
-async function attach(params) {
+async function sendAttachment(params, url, method, type, flags) {
   const FormData = require('form-data');
-  let form = new FormData();
-  try {
-    for (let i = 0; i < params.attachments.length; i++) {
-      form.append(`files[${i}]`, params.attachments[i].file,
-        `${params.attachments[i].filename}`,
-      );
-    }
-    params.attachments = params.attachments.map((a, index) => ({
-      id: index,
-      filename: a.filename,
-      description: a.description ?? '',
-    }));
-  } catch (e) {
-    console.log('error', e);
+  const axios = require('axios');
+  const form = new FormData();
+  for (let i = 0; i < params.attachments.length; i++) {
+    form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename
+    );
   }
-  return form;
+  params.flags = flags;
+  params.attachments = params.attachments.map((a, index) => ({
+    id: index,
+    filename: a.filename,
+    description: a.description ?? '',
+  }));
+  form.append('payload_json', JSON.stringify({
+    type: type,
+    data: params,
+  }));
+  await axios({
+    method: `${method}`,
+    url: `https://discord.com${url}`,
+    data: form,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };

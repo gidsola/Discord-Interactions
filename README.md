@@ -1,18 +1,5 @@
 # Discord Interactions Zero
-**Discord Interactions with Native Webhook handling for a zero dependancy solution.**  
-
-Update 2.0.2 Brings a new format to use.  
-```js  
-await interaction.callback.defer(event, {ephemeral: true});  
-
-await interaction.followup.create(event, {
-  ephemeral: true,
-  content: 'Your suggestion has been noted, Thank You',
-});  
-```
-ONLY the defers remain unchanged.  
-This format also agrees with the auto-formatter :)
-
+**Discord Interactions API handlers.**  
 
 ### Callbacks:
 **https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type**  
