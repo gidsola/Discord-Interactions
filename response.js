@@ -8,40 +8,28 @@ module.exports.callback = {
    * Callback Type: `4`, -- `CHANNEL_MESSAGE_WITH_SOURCE`
    * 
    * @param {object} interaction 
-   * @param {object} input 
+   * @param {object} input object of parameters
    * @returns Promise
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async reply(interaction, input = {}) {
-    let cb_reply;
     try {
       const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
+      input.flags = (input.ephemeral) ? (1 << 6) : 0;
+      var cb_reply;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'post', 4, (input.ephemeral) ? (1 << 6) : 0)
+        ? await sendAttachment(input, url, 'post', 4, input.flags)
         : cb_reply = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 4,
-            data: {
-              tts: input.tts,
-              content: input.content,
-              embeds: input.embeds ?? input.embed,
-              allowed_mentions: input.allowed_mentions,
-              flags: (input.ephemeral) ? (1 << 6) : 0,
-              components: input.components,
-              attachments: input.attachments,
-            },
-          }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 4, data: input }),
         });
+      return cb_reply;
     } catch (e) {
-      console.log(e);
+      console.log('Callback Reply Error:', e);
     }
-    return cb_reply;
   },
 
   /**
@@ -602,25 +590,17 @@ async function sendAttachment(params, url, method, type, flags) {
   const axios = require('axios');
   const form = new FormData();
   for (let i = 0; i < params.attachments.length; i++) {
-    form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename
-    );
+    form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename);
   }
   params.flags = flags;
   params.attachments = params.attachments.map((a, index) => ({
-    id: index,
-    filename: a.filename,
-    description: a.description ?? '',
+    id: index, filename: a.filename, description: a.description ?? ''
   }));
-  form.append('payload_json', JSON.stringify({
-    type: type,
-    data: params,
-  }));
+  form.append('payload_json', JSON.stringify({ type: type, data: params }));
   await axios({
     method: `${method}`,
     url: `https://discord.com${url}`,
     data: form,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
 };
