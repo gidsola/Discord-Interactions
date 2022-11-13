@@ -119,33 +119,22 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async component_update(interaction, input = {}) {
-    let cb_comp_update;
     try {
-      cb_comp_update = await post({
-        url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 7,
-          data: {
-            tts: input.tts,
-            content: input.content,
-            embeds: input.embeds ?? input.embed,
-            allowed_mentions: input.allowed_mentions,
-            flags: (input.ephemeral) ? (1 << 6) : 0,
-            components: input.components,
-            files: input.files ?? null,
-            payload_json: input.payload_json ?? null,
-            attachments: input.attachments,
-          },
-        }),
-      });
+      const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
+      input.flags = (input.ephemeral) ? (1 << 6) : 0;
+      var cb_comp_update;
+      (input?.attachments && input?.attachments?.length)
+        ? await sendAttachment(input, url, 'post', 7, input.flags)
+        : cb_comp_update = await post({
+          url: encodeURI(`discord.com`),
+          path: encodeURI(url),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 7, data: input }),
+        }); return cb_comp_update;
     } catch (e) {
       console.log(e);
     }
-    return cb_comp_update;
+
   },
 
   /**
@@ -251,29 +240,22 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
    */
   async edit_original(interaction, input = {}) {
-    let edit_origin;
     try {
-      edit_origin = await patch({
-        url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tts: input.tts,
-          content: input.content,
-          embeds: input.embeds ?? input.embed,
-          allowed_mentions: input.allowed_mentions,
-          components: input.components,
-          files: input.files ?? null,
-          payload_json: input.payload_json ?? null,
-          attachments: input.attachments,
-        }),
-      });
+      const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`;
+      input.flags = (input.ephemeral) ? (1 << 6) : 0;
+      var edit_origin;
+      (input?.attachments && input?.attachments?.length)
+        ? await sendAttachment(input, url, 'patch', null, input.flags)
+        : edit_origin = await patch({
+          url: encodeURI(`discord.com`),
+          path: encodeURI(url),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        }); return JSON.parse(edit_origin.body.toString());
     } catch (e) {
       console.log(e);
     }
-    return JSON.parse(edit_origin.body.toString());
+
   },
 
   /**
@@ -313,33 +295,23 @@ module.exports.followup = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
    */
   async create(interaction, input = {}) {
-    let f_create;
     try {
-      f_create = await post({
-        url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: input.content,
-          //username: interaction.member.user.username,
-          username: input.username,
-          //avatar_url,
-          tts: input.tts,
-          embeds: input.embed ?? input.embeds,
-          allowed_mentions: input.allowed_mentions,
-          components: input.components,
-          files: input.files ?? null,
-          payload_json: input.payload_json ?? null,
-          attachments: input.attachments,
-          flags: (input.ephemeral) ? (1 << 6) : 0,
-        }),
-      });
+      const url = `/api/webhooks/${interaction.application_id}/${interaction.token}`;
+      input.flags = (input.ephemeral) ? (1 << 6) : 0;
+      var f_create;
+      (input?.attachments && input?.attachments?.length)
+        ? await sendAttachment(input, url, 'post', null, input.flags)
+        : f_create = await post({
+          url: encodeURI(`discord.com`),
+          path: encodeURI(url),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        });
+      return f_create;
     } catch (e) {
       console.log(e);
     }
-    return f_create;
+
   },
 
   /**
@@ -349,28 +321,23 @@ module.exports.followup = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
    */
   async edit(interaction, input = {}) {
-    let f_edit;
     try {
-      f_edit = await patch({
-        url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: input.content,
-          embeds: input.embeds ?? input.embed,
-          allowed_mentions: input.allowed_mentions,
-          components: input.components,
-          files: input.files ?? null,
-          payload_json: input.payload_json ?? null,
-          attachments: input.attachments,
-        }),
-      });
+      const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`;
+      input.flags = (input.ephemeral) ? (1 << 6) : 0;
+      var f_edit;
+      (input?.attachments && input?.attachments?.length)
+        ? await sendAttachment(input, url, 'patch', null, input.flags)
+        : f_edit = await patch({
+          url: encodeURI(`discord.com`),
+          path: encodeURI(url),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        });
+      return f_edit;
     } catch (e) {
       console.log(e);
     }
-    return f_edit;
+
   },
 
   /**
