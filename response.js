@@ -20,7 +20,7 @@ module.exports.callback = {
       var cb_reply;
       var attach;
       (input?.attachments && input?.attachments?.length)
-        ? attach = await sendAttachment(input, url, 'post', 4, input.flags)
+        ? attach = await sendAttachment('data', input, url, 'post', 4, input.flags)
         : cb_reply = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
@@ -126,7 +126,7 @@ module.exports.callback = {
       var cb_comp_update;
       var attach;
       (input?.attachments && input?.attachments?.length)
-        ? attach = await sendAttachment(input, url, 'post', 7, input.flags)
+        ? attach = await sendAttachment('data', input, url, 'post', 7, input.flags)
         : cb_comp_update = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
@@ -248,7 +248,7 @@ module.exports.callback = {
       var edit_origin;
       var resp;
       (input?.attachments && input?.attachments?.length)
-        ? resp = await sendAttachment(input, url, 'patch', null, input.flags)
+        ? resp = await sendAttachment('body', input, url, 'patch', null, input.flags)
         : edit_origin = await patch({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
@@ -304,7 +304,7 @@ module.exports.followup = {
       var f_create;
       var attach;
       (input?.attachments && input?.attachments?.length)
-        ? attach = await sendAttachment(input, url, 'post', null, input.flags)
+        ? attach = await sendAttachment('body', input, url, 'post', null, input.flags)
         : f_create = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
@@ -331,7 +331,7 @@ module.exports.followup = {
       var f_edit;
       var attach;
       (input?.attachments && input?.attachments?.length)
-        ? attach = await sendAttachment(input, url, 'patch', null, input.flags)
+        ? attach = await sendAttachment('body', input, url, 'patch', null, input.flags)
         : f_edit = await patch({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
@@ -557,7 +557,7 @@ async function del(params) {
  * 
  * Thanks LostMyInfo :)
  */
-async function sendAttachment(params, url, method, type, flags) {
+async function sendAttachment(sender, params, url, method, type, flags) {
   const FormData = require('form-data');
   const axios = require('axios');
   const form = new FormData();
@@ -568,7 +568,10 @@ async function sendAttachment(params, url, method, type, flags) {
   params.attachments = params.attachments.map((a, index) => ({
     id: index, filename: a.filename, description: a.description ?? ''
   }));
-  form.append('payload_json', JSON.stringify({ type: type, data: params }));
+  //console.log('values','\nsender',sender, '\nparams',params, '\nurl',url, '\nmethod',method, '\ntype',type, '\nflags',flags);
+  (sender === 'data')
+    ? form.append('payload_json', JSON.stringify({ type: type, data: params }))
+    : form.append('payload_json', JSON.stringify({ type: type, body: {params} }));
   return await axios({
     method: `${method}`,
     url: `https://discord.com${url}`,
