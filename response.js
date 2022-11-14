@@ -18,15 +18,16 @@ module.exports.callback = {
       const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       var cb_reply;
+      var attach;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'post', 4, input.flags)
+        ? attach = await sendAttachment(input, url, 'post', 4, input.flags)
         : cb_reply = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 4, data: input }),
         });
-      return cb_reply;
+      return cb_reply ? cb_reply : attach;
     } catch (e) {
       console.log('Callback Reply Error:', e);
     }
@@ -123,14 +124,15 @@ module.exports.callback = {
       const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       var cb_comp_update;
+      var attach;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'post', 7, input.flags)
+        ? attach = await sendAttachment(input, url, 'post', 7, input.flags)
         : cb_comp_update = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 7, data: input }),
-        }); return cb_comp_update;
+        }); return cb_comp_update ? cb_comp_update : attach;
     } catch (e) {
       console.log(e);
     }
@@ -244,14 +246,15 @@ module.exports.callback = {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       var edit_origin;
+      var resp;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'patch', null, input.flags)
+        ? resp = await sendAttachment(input, url, 'patch', null, input.flags)
         : edit_origin = await patch({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        }); return JSON.parse(edit_origin.body.toString());
+        }); return edit_origin ? JSON.parse(edit_origin.body.toString()) : resp;
     } catch (e) {
       console.log(e);
     }
@@ -299,15 +302,16 @@ module.exports.followup = {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       var f_create;
+      var attach;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'post', null, input.flags)
+        ? attach = await sendAttachment(input, url, 'post', null, input.flags)
         : f_create = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
         });
-      return f_create;
+      return f_create ? f_create : attach;
     } catch (e) {
       console.log(e);
     }
@@ -325,15 +329,16 @@ module.exports.followup = {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       var f_edit;
+      var attach;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'patch', null, input.flags)
+        ? attach = await sendAttachment(input, url, 'patch', null, input.flags)
         : f_edit = await patch({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
         });
-      return f_edit;
+      return f_edit ? f_edit : attach;
     } catch (e) {
       console.log(e);
     }
@@ -564,7 +569,7 @@ async function sendAttachment(params, url, method, type, flags) {
     id: index, filename: a.filename, description: a.description ?? ''
   }));
   form.append('payload_json', JSON.stringify({ type: type, data: params }));
-  await axios({
+  return await axios({
     method: `${method}`,
     url: `https://discord.com${url}`,
     data: form,
