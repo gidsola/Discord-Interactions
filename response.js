@@ -53,18 +53,12 @@ module.exports.callback = {
   async defer(interaction, input = {}) {
     let cb_defer;
     try {
+      input.flags = (input.ephemeral) ? (1 << 6) : 0;
       cb_defer = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 5,
-          data: {
-            flags: (input.ephemeral) ? (1 << 6) : 0,
-          },
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 5, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
       });
     } catch (e) {
       console.log(e);
@@ -571,7 +565,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
   //console.log('values','\nsender',sender, '\nparams',params, '\nurl',url, '\nmethod',method, '\ntype',type, '\nflags',flags);
   (sender === 'data')
     ? form.append('payload_json', JSON.stringify({ type: type, data: params }))
-    : form.append('payload_json', JSON.stringify({ type: type, body: {params} }));
+    : form.append('payload_json', JSON.stringify({ type: type, body: { params } }));
   return await axios({
     method: `${method}`,
     url: `https://discord.com${url}`,
