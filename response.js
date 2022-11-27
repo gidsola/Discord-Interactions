@@ -17,20 +17,16 @@ module.exports.callback = {
     try {
       const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var cb_reply;
-      var attach;
+      let r, a;
       (input?.attachments && input?.attachments?.length)
-        ? attach = await sendAttachment('data', input, url, 'post', 4, input.flags)
-        : cb_reply = await post({
+        ? a = await sendAttachment('data', input, url, 'post', 4, input.flags)
+        : r = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 4, data: input }),
-        });
-      return cb_reply ? cb_reply : attach;
-    } catch (e) {
-      console.log('Callback Reply Error:', e);
-    }
+        }); return r ? r : a;
+    } catch (e) { return e }
   },
 
   /**
@@ -51,19 +47,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async defer(interaction, input = {}) {
-    let cb_defer;
     try {
-      input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      cb_defer = await post({
+      let r = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 5, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return cb_defer;
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -83,23 +74,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async component_defer(interaction, input = {}) {
-    let cb_comp_defer;
     try {
-      cb_comp_defer = await post({
+      let r = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 6,
-          data: { flags: (input.ephemeral) ? (1 << 6) : 0 },
-        }),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return cb_comp_defer;
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 6, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -117,20 +99,16 @@ module.exports.callback = {
     try {
       const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var cb_comp_update;
-      var attach;
+      let r, a;
       (input?.attachments && input?.attachments?.length)
-        ? attach = await sendAttachment('data', input, url, 'post', 7, input.flags)
-        : cb_comp_update = await post({
+        ? a = await sendAttachment('data', input, url, 'post', 7, input.flags)
+        : r = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 7, data: input }),
-        }); return cb_comp_update ? cb_comp_update : attach;
-    } catch (e) {
-      console.log(e);
-    }
-
+        }); return r ? r : a;
+    } catch (e) { return e }
   },
 
   /**
@@ -145,25 +123,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async autocomplete_reply(interaction, input = {}) {
-    let cb_auto_reply;
     try {
-      cb_auto_reply = await post({
+      let r = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 8,
-          data: {
-            choices: input,
-          },
-        }),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return cb_auto_reply;
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 8, data: { input } }),
+      }); return r;
+    } catch (e) { return e; }
   },
 
   /**
@@ -178,27 +145,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async modal_reply(interaction, input = {}) {
-    let cb_modal_reply;
     try {
-      cb_modal_reply = await post({
+      let r = await post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 9,
-          data: {
-            custom_id: input.custom_id,
-            title: input.title,
-            components: input.components,
-          },
-        }),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return cb_modal_reply;
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 9, data: { input } }),
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -210,20 +164,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
    */
   async get_original(interaction) {
-    let get_origin;
     try {
-      get_origin = await get({
+      let r = await get({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: '',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return JSON.parse(get_origin.body.toString());
+      }); return JSON.parse(r.body.toString());
+    } catch (e) { return e; }
   },
 
   /**
@@ -239,20 +187,16 @@ module.exports.callback = {
     try {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var edit_origin;
-      var resp;
+      let r, a
       (input?.attachments && input?.attachments?.length)
-        ? resp = await sendAttachment('body', input, url, 'patch', null, input.flags)
-        : edit_origin = await patch({
+        ? a = await sendAttachment('body', input, url, 'patch', null, input.flags)
+        : r = await patch({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        }); return edit_origin ? JSON.parse(edit_origin.body.toString()) : resp;
-    } catch (e) {
-      console.log(e);
-    }
-
+        }); return r ? JSON.parse(r.body.toString()) : a;
+    } catch (e) { return e }
   },
 
   /**
@@ -264,20 +208,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
    */
   async delete_original(interaction) {
-    let delete_origin;
     try {
-      delete_origin = await del({
+      let r = await del({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: '',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return delete_origin;
+      }); return r;
+    } catch (e) { return e }
   },
 };
 
@@ -295,21 +233,16 @@ module.exports.followup = {
     try {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var f_create;
-      var attach;
+      let r, a;
       (input?.attachments && input?.attachments?.length)
-        ? attach = await sendAttachment('body', input, url, 'post', null, input.flags)
-        : f_create = await post({
+        ? a = await sendAttachment('body', input, url, 'post', null, input.flags)
+        : r = await post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        });
-      return f_create ? f_create : attach;
-    } catch (e) {
-      console.log(e);
-    }
-
+        }); return r ? r : a;
+    } catch (e) { return e; }
   },
 
   /**
@@ -322,21 +255,16 @@ module.exports.followup = {
     try {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var f_edit;
-      var attach;
+      let r, a;
       (input?.attachments && input?.attachments?.length)
-        ? attach = await sendAttachment('body', input, url, 'patch', null, input.flags)
-        : f_edit = await patch({
+        ? a = await sendAttachment('body', input, url, 'patch', null, input.flags)
+        : r = await patch({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        });
-      return f_edit ? f_edit : attach;
-    } catch (e) {
-      console.log(e);
-    }
-
+        }); return r ? r : a;
+    } catch (e) { return e }
   },
 
   /**
@@ -346,20 +274,14 @@ module.exports.followup = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
    */
   async get(interaction, input = {}) {
-    let f_get;
     try {
-      f_get = await get({
+      let r = await get({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: '',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return f_get;
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -369,20 +291,14 @@ module.exports.followup = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
    */
   async del(interaction, input = {}) {
-    let f_delete_followup;
     try {
-      f_delete_followup = await del({
+      let r = await del({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: '',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return f_delete_followup;
+      }); return r;
+    } catch (e) { return e }
   },
 };
 
@@ -400,7 +316,7 @@ async function get(params) {
     };
     options.agent = new https.Agent(options);
 
-    let req = await https.request(options, async (res) => {
+    let req = https.request(options, async (res) => {
       let data = '';
       res.on('data', async (readable) => {
         data += readable;
@@ -441,7 +357,7 @@ async function post(params) {
     };
     options.agent = new https.Agent(options);
 
-    let req = await https.request(options, async (res) => {
+    let req = https.request(options, async (res) => {
       let data = '';
       res.on('data', async (readable) => {
         data += readable;
@@ -483,7 +399,7 @@ async function patch(params) {
     };
     options.agent = new https.Agent(options);
 
-    let req = await https.request(options, async (res) => {
+    let req = https.request(options, async (res) => {
       let data = '';
       res.on('data', async (readable) => {
         data += readable;
@@ -525,7 +441,7 @@ async function del(params) {
     };
     options.agent = new https.Agent(options);
 
-    let req = await https.request(options, async (res) => {
+    let req = https.request(options, async (res) => {
       let data = '';
       res.on('data', async (readable) => {
         data += readable;
@@ -562,7 +478,6 @@ async function sendAttachment(sender, params, url, method, type, flags) {
   params.attachments = params.attachments.map((a, index) => ({
     id: index, filename: a.filename, description: a.description ?? ''
   }));
-  //console.log('values','\nsender',sender, '\nparams',params, '\nurl',url, '\nmethod',method, '\ntype',type, '\nflags',flags);
   (sender === 'data')
     ? form.append('payload_json', JSON.stringify({ type: type, data: params }))
     : form.append('payload_json', JSON.stringify({ type: type, body: { params } }));
