@@ -1,3 +1,6 @@
+
+
+
 /***************************************************/
 /**           INTERACTION CALLBACKS               **/
 /***************************************************/
@@ -15,7 +18,7 @@ module.exports.callback = {
    */
   async reply(interaction, input = {}) {
     try {
-      const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
+      const url = `/api/v10/interactions/${interaction.id}/${interaction.token}/callback`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       let r, a;
       (input?.attachments && input?.attachments?.length)
@@ -25,7 +28,8 @@ module.exports.callback = {
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 4, data: input }),
-        }); return r ? r : a;
+        });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -50,10 +54,11 @@ module.exports.callback = {
     try {
       let r = await post({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
+        path: encodeURI(`/api/v10/interactions/${interaction.id}/${interaction.token}/callback`),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 5, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
-      }); return r;
+      });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -77,10 +82,11 @@ module.exports.callback = {
     try {
       let r = await post({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
+        path: encodeURI(`/api/v10/interactions/${interaction.id}/${interaction.token}/callback`),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 6, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
-      }); return r;
+      });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -97,7 +103,7 @@ module.exports.callback = {
    */
   async component_update(interaction, input = {}) {
     try {
-      const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
+      const url = `/api/v10/interactions/${interaction.id}/${interaction.token}/callback`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       let r, a;
       (input?.attachments && input?.attachments?.length)
@@ -107,7 +113,8 @@ module.exports.callback = {
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 7, data: input }),
-        }); return r ? r : a;
+        });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -126,10 +133,11 @@ module.exports.callback = {
     try {
       let r = await post({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
+        path: encodeURI(`/api/v10/interactions/${interaction.id}/${interaction.token}/callback`),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 8, data: { input } }),
-      }); return r;
+      });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -148,10 +156,11 @@ module.exports.callback = {
     try {
       let r = await post({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
+        path: encodeURI(`/api/v10/interactions/${interaction.id}/${interaction.token}/callback`),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 9, data: { input } }),
-      }); return r;
+      });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -167,10 +176,11 @@ module.exports.callback = {
     try {
       let r = await get({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
+        path: encodeURI(`/api/v10/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
         headers: { 'Content-Type': 'application/json' },
         body: '',
-      }); return r;
+      });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -185,7 +195,7 @@ module.exports.callback = {
    */
   async edit_original(interaction, input = {}) {
     try {
-      const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`;
+      const url = `/api/v10/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       let r, a
       (input?.attachments && input?.attachments?.length)
@@ -195,7 +205,8 @@ module.exports.callback = {
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        }); return r ? r : a;
+        });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -211,10 +222,11 @@ module.exports.callback = {
     try {
       let r = await del({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
+        path: encodeURI(`/api/v10/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
         headers: { 'Content-Type': 'application/json' },
         body: '',
-      }); return r;
+      });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 };
@@ -231,7 +243,7 @@ module.exports.followup = {
    */
   async create(interaction, input = {}) {
     try {
-      const url = `/api/webhooks/${interaction.application_id}/${interaction.token}`;
+      const url = `/api/v10/webhooks/${interaction.application_id}/${interaction.token}`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       let r, a;
       (input?.attachments && input?.attachments?.length)
@@ -241,7 +253,8 @@ module.exports.followup = {
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        }); return r ? r : a;
+        });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -253,7 +266,7 @@ module.exports.followup = {
    */
   async edit(interaction, input = {}) {
     try {
-      const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`;
+      const url = `/api/v10/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       let r, a;
       (input?.attachments && input?.attachments?.length)
@@ -263,7 +276,8 @@ module.exports.followup = {
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        }); return r ? r : a;
+        });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -277,10 +291,11 @@ module.exports.followup = {
     try {
       let r = await get({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
+        path: encodeURI(`/api/v10/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
         headers: { 'Content-Type': 'application/json' },
         body: '',
-      }); return r;
+      });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 
@@ -294,14 +309,35 @@ module.exports.followup = {
     try {
       let r = await del({
         url: encodeURI(`discord.com`),
-        path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
+        path: encodeURI(`/api/v10/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
         headers: { 'Content-Type': 'application/json' },
         body: '',
-      }); return r;
+      });
+      return r ? returnErr(r) : a;
     } catch (e) { return e }
   },
 };
 
+/**
+ * 
+ * @param {*} r api attempt result
+ * @returns 
+ */
+function returnErr(r) {
+  let parsed = JSON.parse(r.body);
+  if (parsed.errors) {
+    let errinfo = {};
+    Object.keys(parsed.errors).forEach((x) => {
+      errinfo[x] = parsed.errors[x]._errors[0];
+    });
+    return {
+      "statusCode": r.statusCode,
+      "Code": parsed.code,
+      "Info": errinfo,
+      "Message": parsed.message
+    };
+  } else return parsed;
+};
 
 //method GET
 async function get(params) {
