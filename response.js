@@ -58,7 +58,7 @@ module.exports.callback = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 5, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
       });
-      return r ? returnErr(r) : a;
+      return returnErr(r);
     } catch (e) { return e }
   },
 
@@ -86,7 +86,7 @@ module.exports.callback = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 6, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
       });
-      return r ? returnErr(r) : a;
+      return returnErr(r);
     } catch (e) { return e }
   },
 
@@ -137,7 +137,7 @@ module.exports.callback = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 8, data: { input } }),
       });
-      return r ? returnErr(r) : a;
+      return returnErr(r);
     } catch (e) { return e }
   },
 
@@ -180,7 +180,7 @@ module.exports.callback = {
         headers: { 'Content-Type': 'application/json' },
         body: '',
       });
-      return r ? returnErr(r) : a;
+      return returnErr(r);
     } catch (e) { return e }
   },
 
@@ -226,7 +226,7 @@ module.exports.callback = {
         headers: { 'Content-Type': 'application/json' },
         body: '',
       });
-      return r ? returnErr(r) : a;
+      return returnErr(r);
     } catch (e) { return e }
   },
 };
@@ -295,7 +295,7 @@ module.exports.followup = {
         headers: { 'Content-Type': 'application/json' },
         body: '',
       });
-      return r ? returnErr(r) : a;
+      return returnErr(r);
     } catch (e) { return e }
   },
 
@@ -313,7 +313,7 @@ module.exports.followup = {
         headers: { 'Content-Type': 'application/json' },
         body: '',
       });
-      return r ? returnErr(r) : a;
+      return returnErr(r);
     } catch (e) { return e }
   },
 };

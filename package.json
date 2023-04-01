@@ -1,6 +1,6 @@
 {
   "name": "discord-interactions-zero",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Discord Interactions API handlers.",
   "main": "response.js",
   "scripts": {

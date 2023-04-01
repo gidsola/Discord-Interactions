@@ -1,6 +1,10 @@
 # Discord Interactions Zero
 **Discord Interactions API handlers.**  
 
+**Version 3.0.1 changelog**
+  - error outputs are up-to-date
+  - used api version updated to current.  
+
 ### Callbacks:
 **https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type**  
 
@@ -152,8 +156,5 @@ await interaction.callback.component_defer(event, {ephemeral: true});
 ```  
 
 My hiding place on Discord:  
-https://dsc.gg/house-of-ghastli
+https://discord.gg/BFTzF8tj9K
 
-
-Proud supporter of 
-[![Proud supporter of Autocode. (https://Autocode.com)](https://content.public.files.stdlib.com/shared/static/branding/autocode-logo.svg "Autocode")](https://Autocode.com) Autocode.
