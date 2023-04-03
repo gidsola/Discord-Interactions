@@ -135,7 +135,7 @@ module.exports.callback = {
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/v10/interactions/${interaction.id}/${interaction.token}/callback`),
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 8, data: { input } }),
+        body: JSON.stringify({ type: 8, data: input }),
       });
       return returnErr(r);
     } catch (e) { return e }
@@ -158,7 +158,7 @@ module.exports.callback = {
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/v10/interactions/${interaction.id}/${interaction.token}/callback`),
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 9, data: { input } }),
+        body: JSON.stringify({ type: 9, data: input }),
       });
       return r ? returnErr(r) : a;
     } catch (e) { return e }
@@ -324,19 +324,26 @@ module.exports.followup = {
  * @returns 
  */
 function returnErr(r) {
-  let parsed = JSON.parse(r.body);
-  if (parsed.errors) {
-    let errinfo = {};
-    Object.keys(parsed.errors).forEach((x) => {
-      errinfo[x] = parsed.errors[x]._errors[0];
-    });
-    return {
-      "statusCode": r.statusCode,
-      "Code": parsed.code,
-      "Info": errinfo,
-      "Message": parsed.message
-    };
-  } else return parsed;
+  if (r.body.length) {
+    let parsed;
+    if (parsed = JSON.parse(r.body)) {
+      if (parsed.errors) {
+        let errinfo = {};
+        Object.keys(parsed.errors).forEach((x) => {
+          errinfo[x] = parsed.errors[x]._errors[0];
+        });
+        return {
+          "statusCode": r.statusCode,
+          "Code": parsed.code,
+          "Message": parsed.message,
+          "Details": errinfo
+        };
+      } else return parsed;
+    } else return r;
+  } else return {
+    "statusCode": r.statusCode,
+    "body": r.body
+  };
 };
 
 //method GET
@@ -499,9 +506,16 @@ async function del(params) {
 };
 
 /**
- * Attachment handler for Interactions. 
- * 
+ * Attachment handler for Interactions.
  * Thanks LostMyInfo :)
+ *  
+ * @param {string} sender 
+ * @param {object} params 
+ * @param {string} url 
+ * @param {string} method 
+ * @param {number} type 
+ * @param {number} flags 
+ * @returns 
  */
 async function sendAttachment(sender, params, url, method, type, flags) {
   const FormData = require('form-data');

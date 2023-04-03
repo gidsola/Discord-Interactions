@@ -1,6 +1,10 @@
 # Discord Interactions Zero
 **Discord Interactions API handlers.**  
 
+**Version 3.0.2 changelog**
+  - corrected 2 inputs that got reverted somehow
+  - Updated the return handler.  
+  
 **Version 3.0.1 changelog**
   - error outputs are up-to-date
   - used api version updated to current.  
